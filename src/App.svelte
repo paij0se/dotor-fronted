@@ -118,14 +118,11 @@
           json.posted_at = -15059544297;
         }
         // TODO: Mover esto a Svelte realmente...
-        document.getElementById("response").innerHTML += ` 
-      <p>${unixTimeToDate(json.posted_at)}</p>
-      <p>${json.user_id}</p>
-      `;
-        document.getElementById("response").innerHTML += json.text.replace(
-          /</g,
-          "<span><</span>"
-        );
+        document.getElementById("response").innerHTML = ` 
+        <p>${unixTimeToDate(json.posted_at)}</p>
+        <p>${json.user_id}</p>
+        <h1>¡Enviado!</h1>
+        `;
       }
     }
   }

@@ -27,4 +27,6 @@ dotor-*.tar
 
 /node_modules
 .elixir_ls
+/dist
 /lib/utils/captcha_images/*.png
+test.sh
