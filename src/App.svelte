@@ -1,140 +1,18 @@
-<script>
-  window.document.body.classList.toggle(localStorage.getItem("theme"));
-
+<script lang="ts">
   import Button from "./Button.svelte";
-  import dev from "./../config";
-  let mainUrl = "";
-  if (dev == true) {
-    mainUrl = "http://127.0.0.1:8080/";
-  } else {
-    mainUrl = "https://dotor.herokuapp.com/";
-  }
-  function unixTimeToDate(time) {
-    const date = new Date(time * 1000);
-    return date.toLocaleString();
-  }
-  //////////////////////////////////////////////////////////////////
-
-  async function postCaptcha() {
-    const input = document.getElementById("c-post").value;
-    if (input == "") {
-      alert("Tienes que rellenar el captcha!");
-    } else {
-      const res = await fetch(`${mainUrl}api/v1/post/captcha`, {
-        method: "POST",
-        body: JSON.stringify({ word: input }),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      const json = await res.json();
-      if (json == "ok") {
-        document.getElementById(
-          "captcha-status"
-        ).innerHTML = `<h1 style="color:green;">Correcto👍</h1>`;
-      } else {
-        document.getElementById(
-          "captcha-status"
-        ).innerHTML = `<h1 style="color:#B22222;">${json} (recarga la página)</h1>`;
-      }
-    }
-  }
-  //////////////////////////////////////////////////////////////////
-
-  async function captcha() {
-    document.getElementById("captcha").src = "skull.gif";
-    const res = await fetch(`${mainUrl}api/v1/get/captcha`);
-    const image = res.url;
-    console.log(image);
-    document.getElementById("captcha").src = image;
-  }
-  //////////////////////////////////////////////////////////////////
-
-  function showPosts() {
-    const res = fetch(`${mainUrl}api/v1/get`);
-    res
-      .then((a) => {
-        return a.json();
-      })
-      .then((posts) => {
-        for (let i = 0; i < posts.length; i++) {
-          const postName = posts[i]["name"];
-          const postText = posts[i]["text"];
-          document.getElementById("posts").innerHTML += `
-          <div id="response"></div>          
-          <p>${unixTimeToDate(posts[i]["posted_at"])}</p>
-          <details>
-          <summary>More info</summary>
-          <p>user: @${posts[i]["user_id"]}</p> 
-          <p>post: ${posts[i]["post_id"]}</p> 
-          </details>
-          `;
-          document.getElementById("posts").innerHTML += postName.replace(
-            /</g,
-            `<code><span><</span></code>`
-          );
-          document.getElementById("posts").innerHTML += `<br/ >`;
-          document.getElementById("posts").innerHTML += postText.replace(
-            /</g,
-            `<code><span><</span></code>`
-          );
-        }
-      });
-  }
+  import postCaptcha from "./functions/postCaptcha";
+  import captcha from "./functions/getCaptcha";
+  import showPosts from "./functions/showPosts";
+  import doPost from "./functions/post";
+  const theme = localStorage.getItem("theme");
+  window.document.body.classList.toggle(theme);
   showPosts();
-  //////////////////////////////////////////////////////////////////
-  async function doPost() {
-    const inp = document.getElementById("n").value;
-    var name = document.getElementById("name").value;
-
-    if (name == 0) {
-      name = "Anon";
-    }
-    if (inp == "") {
-      alert("Tu texto está vacio!");
-    } else {
-      if (name.length > 32) {
-        alert("¡El máximo permitido para el nombre son 32 caracteres!");
-      } else {
-        const res = await fetch(`${mainUrl}api/v1/post`, {
-          method: "POST",
-          body: JSON.stringify({ text: inp, name: name }),
-          headers: {
-            "content-type": "application/json",
-          },
-        });
-        const json = await res.json();
-        //console.log(json);
-        // cerror = captcha error
-        if (json[0] == "cerror") {
-          json.user_id = `<h1 style="color:#B22222;">${json[1]}</h1>`;
-          json.posted_at = -15059544297;
-        }
-
-        if (json[0] == "error") {
-          json.user_id = `
-        <img width=20%; height=auto  ; src="nao.jpg">
-        <h1 style="color:#B22222;">!Error¡ Solo 818 caracteres o menos</h1>
-        <h1 style="color:#B22222;">${json[1]}</h1>
-        `;
-          json.posted_at = -15059544297;
-        }
-        // TODO: Mover esto a Svelte realmente...
-        document.getElementById("response").innerHTML = ` 
-        <p>${unixTimeToDate(json.posted_at)}</p>
-        <p>${json.user_id}</p>
-        <h1>¡Enviado!</h1>
-        `;
-        await new Promise((r) => setTimeout(r, 2000));
-        window.location.reload();
-      }
-    }
-  }
 </script>
 
 <main>
   <title>DotorChan</title>
   <h1>DotorChan</h1>
+  <!-- svelte-ignore missing-declaration -->
   <Button>Cambiar tema</Button>
   <p>
     <a href="https://github.com/paij0se/dotor"
@@ -144,6 +22,7 @@
   <br />
 
   <div id="captcha-container">
+    <!-- svelte-ignore missing-declaration -->
     <button type="button" id="pedir-c" on:click|once={captcha}
       >Pedir Captcha</button
     >
@@ -151,29 +30,21 @@
     <img id="captcha" />
     <div id="captcha-status" />
     <input placeholder="Captcha" id="c-post" />
+    <!-- svelte-ignore missing-declaration -->
     <button type="button" id="enviar-c" on:click|once={postCaptcha}
       >Enviar Captcha</button
     >
   </div>
-
   <br />
-
-  <div id="form">
-    <!--
-      form
-    -->
-    <div id="form-input">
-      <br />
-      <input id="name" placeholder="Anónimo" />
-      <br />
-      <textarea rows="10" id="n" placeholder="¿Qué estas pensando?" />
-      <button type="button" id="post-b" on:click|once={doPost}>Enviar</button>
-      <div id="response-b" />
-    </div>
-
-    <h1>Posts</h1>
-    <div id="posts" />
-  </div>
+  <br />
+  <input id="name" placeholder="Anónimo" />
+  <br />
+  <textarea rows="10" id="post-text" placeholder="¿Qué estas pensando?" />
+  <!-- svelte-ignore missing-declaration -->
+  <button type="button" id="post-b" on:click|once={doPost}>Enviar</button>
+  <div id="response-b" />
+  <h1>Posts</h1>
+  <div id="posts" />
 </main>
 
 <style>
@@ -196,4 +67,5 @@
     font-family: "Cascadia Code";
     font-weight: 600;
   }
+
 </style>
