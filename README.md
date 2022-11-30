@@ -1,5 +1,9 @@
 # This is the DotorChan client
 
+
+https://user-images.githubusercontent.com/69026987/204868890-9ffa2eaf-713f-491b-b286-2098fd92071d.mp4
+
+
 # Deploy
 
 Clone the repo
