@@ -110,6 +110,7 @@
           json.user_id = `<h1 style="color:#B22222;">${json[1]}</h1>`;
           json.posted_at = -15059544297;
         }
+
         if (json[0] == "error") {
           json.user_id = `
         <img width=20%; height=auto  ; src="nao.jpg">
@@ -124,6 +125,8 @@
         <p>${json.user_id}</p>
         <h1>¡Enviado!</h1>
         `;
+        await new Promise((r) => setTimeout(r, 2000));
+        window.location.reload();
       }
     }
   }
@@ -164,7 +167,7 @@
       <input id="name" placeholder="Anónimo" />
       <br />
       <textarea rows="10" id="n" placeholder="¿Qué estas pensando?" />
-      <button type="button" id="post-b" on:click={doPost}>Enviar</button>
+      <button type="button" id="post-b" on:click|once={doPost}>Enviar</button>
       <div id="response-b" />
     </div>
 
