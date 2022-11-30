@@ -1,12 +1,13 @@
 <script>
   window.document.body.classList.toggle(localStorage.getItem("theme"));
+
   import Button from "./Button.svelte";
   import dev from "./../config";
   let mainUrl = "";
   if (dev == true) {
     mainUrl = "http://127.0.0.1:8080/";
   } else {
-    mainUrl = "https://dotor.elpanajose.repl.co/";
+    mainUrl = "https://dotor.herokuapp.com/";
   }
   function unixTimeToDate(time) {
     const date = new Date(time * 1000);
