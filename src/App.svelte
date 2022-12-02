@@ -16,33 +16,35 @@
   <Button>Cambiar tema</Button>
   <p>
     <a href="https://github.com/paij0se/dotor"
-      >Código fuente de está porquería.</a
+      >Código fuente de está porquería</a
     >
   </p>
   <br />
-
-  <div id="captcha-container">
+  <details>
+    <summary id="gay">Hacer un post</summary>
+    <div id="captcha-container">
+      <!-- svelte-ignore missing-declaration -->
+      <button type="button" id="pedir-c" on:click|once={captcha}
+        >Pedir Captcha</button
+      >
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <img id="captcha" />
+      <div id="captcha-status" />
+      <input placeholder="Captcha" id="c-post" />
+      <!-- svelte-ignore missing-declaration -->
+      <button type="button" id="enviar-c" on:click|once={postCaptcha}
+        >Enviar Captcha</button
+      >
+    </div>
+    <br />
+    <br />
+    <input id="name" placeholder="Anónimo" />
+    <br />
+    <textarea rows="10" id="post-text" placeholder="¿Qué estas pensando?" />
     <!-- svelte-ignore missing-declaration -->
-    <button type="button" id="pedir-c" on:click|once={captcha}
-      >Pedir Captcha</button
-    >
-    <!-- svelte-ignore a11y-missing-attribute -->
-    <img id="captcha" />
-    <div id="captcha-status" />
-    <input placeholder="Captcha" id="c-post" />
-    <!-- svelte-ignore missing-declaration -->
-    <button type="button" id="enviar-c" on:click|once={postCaptcha}
-      >Enviar Captcha</button
-    >
-  </div>
-  <br />
-  <br />
-  <input id="name" placeholder="Anónimo" />
-  <br />
-  <textarea rows="10" id="post-text" placeholder="¿Qué estas pensando?" />
-  <!-- svelte-ignore missing-declaration -->
-  <button type="button" id="post-b" on:click|once={doPost}>Enviar</button>
-  <div id="response-b" />
+    <button type="button" id="post-b" on:click|once={doPost}>Enviar</button>
+    <div id="response-b" />
+  </details>
   <h1>Posts</h1>
   <div id="posts" />
 </main>
@@ -68,4 +70,35 @@
     font-weight: 600;
   }
 
+  #gay {
+    font-family: "Cascadia Code";
+    font-size: 2em;
+    font-weight: bold;
+    background-image: linear-gradient(
+      to right,
+      red,
+      orange,
+      yellow,
+      green,
+      blue,
+      indigo,
+      violet,
+      red,
+      orange,
+      yellow,
+      green,
+      blue,
+      indigo,
+      violet
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow-animation 70s linear infinite;
+  }
+
+  @keyframes rainbow-animation {
+    to {
+      background-position: 4500vh;
+    }
+  }
 </style>
